@@ -1,0 +1,13 @@
+# ビルドで作られる物
+*.vsix
+node_modules/
+__pycache__/
+*.pyc
+
+# 開発用
+tools/
+
+# OS
+Thumbs.db
+Desktop.ini
+.DS_Store

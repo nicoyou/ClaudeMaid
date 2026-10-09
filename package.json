@@ -1,0 +1,95 @@
+{
+  "name": "claude-maid",
+  "displayName": "Claude Maid",
+  "description": "Claude Code の入力欄の右上に、ちっちゃいメイドさんを常駐させます",
+  "version": "0.0.0",
+  "publisher": "nicoyou",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nicoyou/ClaudeMaid.git"
+  },
+  "bugs": {
+    "url": "https://github.com/nicoyou/ClaudeMaid/issues"
+  },
+  "homepage": "https://github.com/nicoyou/ClaudeMaid#readme",
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "keywords": [
+    "claude",
+    "claude-code",
+    "maid",
+    "pixel-art",
+    "pet"
+  ],
+  "main": "./src/extension.js",
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "extensionDependencies": [
+    "anthropic.claude-code"
+  ],
+  "scripts": {
+    "vscode:uninstall": "node ./src/uninstall.js"
+  },
+  "contributes": {
+    "commands": [
+      {
+        "command": "claudeMaid.show",
+        "title": "メイドさんを呼ぶ",
+        "category": "Claude Maid"
+      },
+      {
+        "command": "claudeMaid.hide",
+        "title": "メイドさんをお休みさせる",
+        "category": "Claude Maid"
+      },
+      {
+        "command": "claudeMaid.reapply",
+        "title": "メイドさんを再配置する",
+        "category": "Claude Maid"
+      }
+    ],
+    "configuration": {
+      "title": "Claude Maid",
+      "properties": {
+        "claudeMaid.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "メイドさんを表示する"
+        },
+        "claudeMaid.size": {
+          "type": "number",
+          "default": 100,
+          "minimum": 16,
+          "maximum": 300,
+          "description": "メイドさんの幅。100 で 1 ドット=1px、200 で2倍"
+        },
+        "claudeMaid.offsetRight": {
+          "type": "number",
+          "default": 14,
+          "description": "入力欄の右端からの距離"
+        },
+        "claudeMaid.greeting": {
+          "type": "string",
+          "default": "ご主人様、なんなりと♪",
+          "description": "入力欄をクリックしたときの吹き出し"
+        },
+        "claudeMaid.greetingSeconds": {
+          "type": "number",
+          "default": 3.5,
+          "description": "吹き出しを表示する秒数"
+        },
+        "claudeMaid.imagePath": {
+          "type": "string",
+          "default": "",
+          "description": "好きな画像 (png / gif / svg / webp) の絶対パス"
+        }
+      }
+    }
+  }
+}

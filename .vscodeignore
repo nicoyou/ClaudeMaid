@@ -1,0 +1,9 @@
+# 拡張機能のパッケージに入れない物
+.git/**
+.gitignore
+.gitattributes
+.github/**
+.vscode/**
+.claude/**
+*.vsix
+tools/**
