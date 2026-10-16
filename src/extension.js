@@ -50,6 +50,7 @@ function apply(context, announce) {
         maids,
         size: cfg.get('size', 100),
         offsetRight: cfg.get('offsetRight', 14),
+        fadeOpacity: cfg.get('fadeOpacity', 0.2),
         showGreeting: cfg.get('showGreeting', true) && maids.some((m) => m.lines.length > 0),
         greetingSeconds: cfg.get('greetingSeconds', 3.5),
       };

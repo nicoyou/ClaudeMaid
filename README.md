@@ -4,6 +4,7 @@ Claude Code のチャット入力欄右上に、ちっちゃいメイドさん�
 
 - チャットを開くたびに、ランダムなメイドさんが 1 人やってきます
 - 入力欄をクリックするとセリフを話します
+- マウスを近づけると透けて、後ろの文字が読めます
 - ゆらゆら待機モーションと、ときどきにっこりまばたき
 - Claude Code が更新されても自動で再配置します
 
@@ -30,8 +31,9 @@ CSS には乱数がないので、誰が出てくるかとセリフを選ぶ小�
 | `claudeMaid.character` | 開くたびにランダムか、特定の子を配置する |
 | `claudeMaid.size` | 大きさ。100 で 1ドット = 1px |
 | `claudeMaid.offsetRight` | 入力欄の右端からの距離 ( px ) |
+| `claudeMaid.fadeOpacity` | マウスを近づけたときの不透明度 |
 | `claudeMaid.showGreeting` | 吹き出しで話すかどうか |
-| `claudeMaid.greeting` | 空ならメイドさんごとの専用のセリフ。書くと全員がこのセリフを話す |
+| `claudeMaid.greeting` | キャラクターのセリフ、空ならメイドさんごとの専用のセリフ |
 | `claudeMaid.greetingSeconds` | 吹き出しを表示する秒数 |
 | `claudeMaid.imagePath` | 好きな画像の絶対パス。指定すると、ほかのキャラクターにも差し替えられる |
 

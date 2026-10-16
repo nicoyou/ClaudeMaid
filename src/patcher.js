@@ -10,6 +10,8 @@ const START = '/* ==== claude-maid:start ==== */';
 const END = '/* ==== claude-maid:end ==== */';
 const BLOCK_RE = /\n?\/\* ==== claude-maid:start ==== \*\/[\s\S]*?\/\* ==== claude-maid:end ==== \*\/\n?/g;
 const FALLBACK_CLASS = 'inputContainer_cKsPxg';
+// マウスがメイドさんの絵からこの距離以内に入ったら近づいたとみなす
+const NEAR_MARGIN = 20;
 
 const MIME = { '.svg': 'image/svg+xml', '.png': 'image/png', '.gif': 'image/gif', '.webp': 'image/webp', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg' };
 
@@ -27,13 +29,19 @@ function detectInputClass(claudeDir) {
     const js = fs.readFileSync(path.join(claudeDir, 'webview', 'index.js'), 'utf8');
     const m = js.match(/inputWrapper:"inputWrapper_[\w-]+",inputContainer:"(inputContainer_[\w-]+)"/);
     if (m) return m[1];
-  } catch {}
+  } catch { }
   return FALLBACK_CLASS;
 }
 
 function imageDataUri(imagePath) {
   const mime = MIME[path.extname(imagePath).toLowerCase()] || 'image/png';
   return `data:${mime};base64,${fs.readFileSync(imagePath).toString('base64')}`;
+}
+
+/** マウスを近づけたときのメイドさんの濃さ。透けさせない設定なら null */
+function fadeOpacity(opts) {
+  const opacity = Number(opts.fadeOpacity);
+  return opacity >= 0 && opacity < 1 ? opacity : null;
 }
 
 function cssString(s) {
@@ -61,8 +69,9 @@ function buildCss(cls, opts) {
   let css = `
 ${sel}{${vars(first)}}
 ${rest.map((m) => `${who(m)}{${vars(m)}}`).join('\n')}
-${sel}::after{content:"";position:absolute;right:${right}px;bottom:calc(100% - ${sink}px);width:var(--claude-maid-w);height:var(--claude-maid-h);background:var(--claude-maid-img) no-repeat center bottom/contain;image-rendering:pixelated;filter:drop-shadow(1px 0 0 #fffc) drop-shadow(-1px 0 0 #fffc) drop-shadow(0 1px 0 #fffc) drop-shadow(0 -1px 0 #fffc);pointer-events:none;z-index:20;}
+${sel}::after{content:"";position:absolute;right:${right}px;bottom:calc(100% - ${sink}px);width:var(--claude-maid-w);height:var(--claude-maid-h);background:var(--claude-maid-img) no-repeat center bottom/contain;image-rendering:pixelated;filter:drop-shadow(1px 0 0 #fffc) drop-shadow(-1px 0 0 #fffc) drop-shadow(0 1px 0 #fffc) drop-shadow(0 -1px 0 #fffc);pointer-events:none;z-index:20;transition:opacity .2s ease}
 `;
+  if (fadeOpacity(opts) != null) css += `:root[data-claude-maid-near] ${sel}::after{opacity:${fadeOpacity(opts)}}\n`;
   if (opts.showGreeting !== false) {
     css += `${sel}::before{content:${cssString(first.lines[0])};position:absolute;right:calc(${right - 4}px + var(--claude-maid-w));bottom:calc(100% + var(--claude-maid-h) * 0.55);padding:3px 8px;border-radius:10px 10px 2px 10px;font-size:11px;line-height:1.4;white-space:pre;background:var(--vscode-editorHoverWidget-background);color:var(--vscode-editorHoverWidget-foreground);border:1px solid var(--vscode-editorHoverWidget-border);box-shadow:0 2px 6px #0003;pointer-events:none;z-index:21;opacity:0;visibility:hidden}
 ${opts.maids.flatMap((m) => m.lines.map((line, i) => `:root[data-claude-maid="${m.id}"][data-claude-maid-line="${i}"] ${sel}::before{content:${cssString(line)}}`)).join('\n')}
@@ -75,14 +84,23 @@ ${sel}:focus-within::before{animation:claude-maid-say ${Math.max(1, Number(opts.
 
 function buildJs(cls, opts) {
   const maids = JSON.stringify(opts.maids.map((m) => [m.id, m.lines.length]));
+  // マウスがメイドさんに近づいている間だけ <html> に属性を付けて、CSS 側で透けさせる
+  // 絵の位置と大きさは入力欄の ::after の計算済みスタイルから求める
+  const nearJs = fadeOpacity(opts) == null ? "" : `
+let isNear=false,isQueued=false,pointerX=0,pointerY=0;
+const setNear=(next)=>{if(next===isNear)return;isNear=next;root.toggleAttribute("data-claude-maid-near",next);};
+const checkNear=()=>{isQueued=false;setNear([...document.querySelectorAll(selector)].some((box)=>{const rect=box.getBoundingClientRect(),style=getComputedStyle(box,"::after"),right=rect.right-parseFloat(style.right),bottom=rect.bottom-parseFloat(style.bottom);return pointerX>=right-parseFloat(style.width)-${NEAR_MARGIN}&&pointerX<=right+${NEAR_MARGIN}&&pointerY>=bottom-parseFloat(style.height)-${NEAR_MARGIN}&&pointerY<=bottom+${NEAR_MARGIN};}));};
+document.addEventListener("mousemove",(e)=>{pointerX=e.clientX;pointerY=e.clientY;if(isQueued)return;isQueued=true;requestAnimationFrame(checkNear);},{passive:true});
+root.addEventListener("mouseleave",()=>setNear(false));
+`;
   const js = `
 ;(()=>{try{
-const root=document.documentElement,maids=${maids},[id,count]=maids[Math.floor(Math.random()*maids.length)];
+const root=document.documentElement,selector=${JSON.stringify(`.${cls}`)},maids=${maids},[id,count]=maids[Math.floor(Math.random()*maids.length)];
 let last=-1;
 const say=()=>{let i=Math.floor(Math.random()*count);if(count>1&&i===last)i=(i+1)%count;last=i;root.setAttribute("data-claude-maid-line",String(i));};
 root.setAttribute("data-claude-maid",id);say();
-document.addEventListener("focusin",(e)=>{const box=e.target instanceof Element&&e.target.closest(${JSON.stringify(`.${cls}`)});if(box&&!(e.relatedTarget instanceof Node&&box.contains(e.relatedTarget)))say();},true);
-}catch(e){}})();
+document.addEventListener("focusin",(e)=>{const box=e.target instanceof Element&&e.target.closest(selector);if(box&&!(e.relatedTarget instanceof Node&&box.contains(e.relatedTarget)))say();},true);
+${nearJs}}catch(e){}})();
 `;
   return `\n${START}${js}${END}\n`;
 }

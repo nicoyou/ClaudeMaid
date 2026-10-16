@@ -97,6 +97,13 @@
           "default": 14,
           "description": "入力欄の右端からの距離"
         },
+        "claudeMaid.fadeOpacity": {
+          "type": "number",
+          "default": 0.2,
+          "minimum": 0,
+          "maximum": 1,
+          "description": "マウスを近づけたときのメイドさんの不透明度"
+        },
         "claudeMaid.showGreeting": {
           "type": "boolean",
           "default": true,
