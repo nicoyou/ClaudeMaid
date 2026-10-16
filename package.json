@@ -62,22 +62,50 @@
           "default": true,
           "description": "メイドさんを表示する"
         },
+        "claudeMaid.character": {
+          "type": "string",
+          "default": "random",
+          "enum": [
+            "random",
+            "twintail",
+            "catmaid",
+            "apprentice",
+            "blackhair",
+            "blonde",
+            "oneesan"
+          ],
+          "enumDescriptions": [
+            "チャットを開くたびにランダムで1人",
+            "ツインテールメイド",
+            "猫耳メイド",
+            "見習いメイド",
+            "黒髪メイド",
+            "金髪メイド",
+            "お姉さんメイド"
+          ],
+          "description": "表示するメイドさん"
+        },
         "claudeMaid.size": {
           "type": "number",
           "default": 100,
           "minimum": 16,
           "maximum": 300,
-          "description": "メイドさんの幅。100 で 1 ドット=1px、200 で2倍"
+          "description": "メイドさんの大きさ。100 で 1 ドット=1px、200 で2倍"
         },
         "claudeMaid.offsetRight": {
           "type": "number",
           "default": 14,
           "description": "入力欄の右端からの距離"
         },
+        "claudeMaid.showGreeting": {
+          "type": "boolean",
+          "default": true,
+          "description": "入力欄をクリックしたときに、メイドさんが吹き出しで話す"
+        },
         "claudeMaid.greeting": {
           "type": "string",
-          "default": "ご主人様、なんなりと♪",
-          "description": "入力欄をクリックしたときの吹き出し"
+          "default": "",
+          "description": "入力欄をクリックしたときの吹き出しのセリフ。空ならメイドさんごとの専用のセリフからランダム。"
         },
         "claudeMaid.greetingSeconds": {
           "type": "number",

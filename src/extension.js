@@ -2,6 +2,7 @@ const vscode = require('vscode');
 const path = require('path');
 const fs = require('fs');
 const { patchAll, imageDataUri } = require('./patcher');
+const { loadMaids } = require('./maids');
 
 const CLAUDE_ID = 'anthropic.claude-code';
 
@@ -38,17 +39,18 @@ function apply(context, announce) {
   try {
     let opts = null;
     if (cfg.get('enabled', true)) {
-      let imagePath = context.asAbsolutePath(path.join('media', 'maid.svg'));
+      const greeting = (cfg.get('greeting') || '').trim();
+      let maids = loadMaids(context.extensionPath, cfg.get('character', 'random'), greeting);
       const custom = (cfg.get('imagePath') || '').trim();
       if (custom) {
-        if (fs.existsSync(custom)) imagePath = custom;
+        if (fs.existsSync(custom)) maids = [{ id: 'custom', imageUri: imageDataUri(custom), lines: greeting ? [greeting] : [] }];
         else vscode.window.showWarningMessage(`Claude Maid: 画像が見つかりません: ${custom}(標準のメイドさんを使います)`);
       }
       opts = {
-        imageUri: imageDataUri(imagePath),
+        maids,
         size: cfg.get('size', 100),
         offsetRight: cfg.get('offsetRight', 14),
-        greeting: cfg.get('greeting', ''),
+        showGreeting: cfg.get('showGreeting', true) && maids.some((m) => m.lines.length > 0),
         greetingSeconds: cfg.get('greetingSeconds', 3.5),
       };
     }

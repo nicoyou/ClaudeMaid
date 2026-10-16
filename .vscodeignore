@@ -2,8 +2,10 @@
 .git/**
 .gitignore
 .gitattributes
+CLAUDE.md
 .github/**
 .vscode/**
 .claude/**
 *.vsix
 tools/**
+.mypy_cache/**
