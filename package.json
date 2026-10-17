@@ -4,6 +4,7 @@
   "description": "Claude Code の入力欄の右上に、ちっちゃいメイドさんを常駐させます",
   "version": "0.0.0",
   "publisher": "nicoyou",
+  "icon": "media/icon.png",
   "license": "MIT",
   "repository": {
     "type": "git",
