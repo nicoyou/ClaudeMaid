@@ -8,6 +8,20 @@ Claude Code のチャット入力欄右上に、ちっちゃいメイドさん�
 - ゆらゆら待機モーションと、ときどきにっこりまばたき
 - Claude Code が更新されても自動で再配置します
 
+## スクリーンショット
+
+金髪メイド
+
+![金髪メイドと一緒にバグを直しているところ](docs/screenshots/blonde.png)
+
+猫耳メイド
+
+![猫耳メイドと一緒にキャッシュを追加しているところ](docs/screenshots/catmaid.png)
+
+お姉さんメイド
+
+![お姉さんメイドと一緒にダークモードに対応しているところ](docs/screenshots/oneesan.png)
+
 ## 仕組み
 
 VS Code の拡張機能は、ほかの拡張機能の Webview の中には描画できません。

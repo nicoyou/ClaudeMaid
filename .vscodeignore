@@ -8,4 +8,5 @@ CLAUDE.md
 .claude/**
 *.vsix
 tools/**
+docs/**
 .mypy_cache/**
