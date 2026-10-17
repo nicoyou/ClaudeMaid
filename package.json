@@ -2,7 +2,7 @@
   "name": "claude-maid",
   "displayName": "Claude Maid",
   "description": "Claude Code の入力欄の右上に、ちっちゃいメイドさんを常駐させます",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "publisher": "nicoyou",
   "icon": "media/icon.png",
   "license": "MIT",
@@ -76,7 +76,7 @@
             "oneesan"
           ],
           "enumDescriptions": [
-            "チャットを開くたびにランダムで1人",
+            "チャットを開くたびにランダムで 1 人",
             "ツインテールメイド",
             "猫耳メイド",
             "見習いメイド",
@@ -91,7 +91,7 @@
           "default": 100,
           "minimum": 16,
           "maximum": 300,
-          "description": "メイドさんの大きさ。100 で 1 ドット=1px、200 で2倍"
+          "description": "メイドさんの大きさ。100 で 1 ドット = 1px、200 で 2 倍"
         },
         "claudeMaid.offsetRight": {
           "type": "number",
@@ -113,7 +113,7 @@
         "claudeMaid.greeting": {
           "type": "string",
           "default": "",
-          "description": "入力欄をクリックしたときの吹き出しのセリフ。空ならメイドさんごとの専用のセリフからランダム。"
+          "description": "入力欄をクリックしたときの吹き出しのセリフ。空ならメイドさんごとの専用のセリフからランダム"
         },
         "claudeMaid.greetingSeconds": {
           "type": "number",
@@ -123,7 +123,7 @@
         "claudeMaid.imagePath": {
           "type": "string",
           "default": "",
-          "description": "好きな画像 (png / gif / svg / webp) の絶対パス"
+          "description": "好きな画像 ( png / gif / svg / webp ) の絶対パス"
         }
       }
     }
